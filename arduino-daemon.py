@@ -8,16 +8,17 @@
 import serial
 import influxdb
 import time
-import sys
+import os.path
 
 while True:
 	try:
 		influx = influxdb.InfluxDBClient("localhost", 8086, "root", "root", "hometv")
 
-		ser = serial.Serial(sys.argv[1] or "/dev/ttyACM0", 9600)  # 9600 bauds
+		ser = serial.Serial("/dev/ttyACM0" if os.path.exists("/dev/ttyACM0") else "/dev/ttyACM1", 9600)  # 9600 bauds
 		while True:
 			line = ser.readline()
 			parts = line.decode('ascii').strip().split(" ")
+			print(time.ctime(), line, parts)
 
 			if parts[0] != "D":
 				continue
