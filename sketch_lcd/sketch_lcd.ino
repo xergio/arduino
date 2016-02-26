@@ -1,13 +1,14 @@
 
 // https://www.arduino.cc/en/Reference/LiquidCrystal
 // https://www.youtube.com/watch?v=dZZynJLmTn8
+// https://www.youtube.com/watch?v=R-CRIthB7ZY
 // http://howtomechatronics.com/tutorials/arduino/lcd-tutorial/
 
 #include <DHT.h>
 #include <LiquidCrystal.h>
 
 #define DHT_APin A0 // Pin Análogico al que he conectado el sensor
-#define DHT_Type DHT11 // mi sensor es el DHT11
+#define DHT_Type DHT22 // mi sensor es el DHT11
 
 // init
 DHT dht(DHT_APin, DHT_Type);
