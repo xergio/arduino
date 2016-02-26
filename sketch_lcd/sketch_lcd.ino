@@ -1,27 +1,41 @@
 
-// https://www.arduino.cc/en/Reference/LiquidCrystal
-// https://www.youtube.com/watch?v=dZZynJLmTn8
-// https://www.youtube.com/watch?v=R-CRIthB7ZY
-// http://howtomechatronics.com/tutorials/arduino/lcd-tutorial/
+/*
+LCD:
+
+https://www.arduino.cc/en/Reference/LiquidCrystal
+https://www.youtube.com/watch?v=dZZynJLmTn8
+https://www.youtube.com/watch?v=R-CRIthB7ZY
+http://howtomechatronics.com/tutorials/arduino/lcd-tutorial/
+
+
+DHT (temp & hum)
+
+https://github.com/adafruit/DHT-sensor-library/blob/master/examples/DHTtester/DHTtester.ino
+*/
 
 #include <DHT.h>
 #include <LiquidCrystal.h>
 
-#define DHT_APin A0 // Pin Análogico al que he conectado el sensor
+#define LED_Pin 13 // Pin del led de la placa
+#define DHT_APin A0 // Pin Análogico al que he conectado el sensor de temperatura
 #define DHT_Type DHT22 // mi sensor es el DHT11
+//#define PHOTORES_APin 3 // Pin Análogico al que he conectado el sensor de luz
 
 // init
 DHT dht(DHT_APin, DHT_Type);
 LiquidCrystal lcd(9, 10, 4, 5, 6, 7); // syntax: LiquidCrystal(rs, enable, d4, d5, d6, d7)
 
 int timer = 0;
+int interval = 60;
+//int luz;
 
 void setup() { // put your setup code here, to run once:
 	Serial.begin(9600);
 	dht.begin();
 	lcd.begin(16, 2);
 
-	pinMode(13, OUTPUT); // 13 es el pin con el led
+	pinMode(LED_Pin, OUTPUT);
+	//pinMode(PHOTORES_APin, INPUT);
 
 	lcd.print("  hue hue hue");
 
@@ -44,6 +58,8 @@ void loop() { // put your main code here, to run repeatedly:
 		// Compute heat index in Celsius (isFahreheit = false)
 		float hic = dht.computeHeatIndex(t, h, false); // sensación térmica
 
+		//luz = digitalRead(PHOTORES_APin);
+
 		// D = DHT, para el script en python que leerá esto
 		Serial.print("D h:");
 		Serial.print(h);
@@ -51,6 +67,8 @@ void loop() { // put your main code here, to run repeatedly:
 		Serial.print(t);
 		Serial.print(" i:");
 		Serial.print(hic);
+		//Serial.print(" l:");
+		//Serial.print(luz);
 		Serial.println("");
 
 		lcd.clear();
@@ -67,7 +85,7 @@ void loop() { // put your main code here, to run repeatedly:
 		digitalWrite(13, LOW);
 		//delay(60000); // 1 minuto
 
-		timer = 60;
+		timer = interval;
 	}
 
 	lcd.setCursor(14, 2);
