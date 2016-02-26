@@ -3,15 +3,18 @@
 # haha, "daemon" :D
 # aquí iré metiendo la lectura de datos y guardado en algún sitio
 
+# alias arduinousb='sudo chmod a+rw /dev/ttyACM0'
+
 import serial
-import influxdb 
+import influxdb
 import time
+import sys
 
 while True:
 	try:
 		influx = influxdb.InfluxDBClient("localhost", 8086, "root", "root", "hometv")
 
-		ser = serial.Serial("/dev/ttyACM0", 9600)  # 9600 bauds
+		ser = serial.Serial(sys.argv[1] or "/dev/ttyACM0", 9600)  # 9600 bauds
 		while True:
 			line = ser.readline()
 			parts = line.decode('ascii').strip().split(" ")
