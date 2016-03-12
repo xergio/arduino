@@ -42,6 +42,17 @@ while True:
 						"real": float(parts[2][2:]),
 						"sensacion": float(parts[3][2:])
 					}
+				},
+				{
+					"measurement": "luminosidad",
+					"tags": {
+						"location": "home"
+					},
+					"fields": {
+						"avg": float(parts[4][3:]),
+						"min": float(parts[5][3:]),
+						"max": float(parts[6][3:])
+					}
 				}
 			])
 
