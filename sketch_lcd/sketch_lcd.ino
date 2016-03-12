@@ -31,11 +31,7 @@ LiquidCrystal lcd(9, 10, 4, 5, 6, 7); // syntax: LiquidCrystal(rs, enable, d4, d
 int timer = 0;
 int milis = 0;
 int ticks = 0;
-int tmp = 0;
-int loops = 0;
-int luzMin = 1024; // máximo de lectura para el sensor
-int luzMax = 0;
-long luzSum = 0; // value use to exceed INT
+int luz = 0;
 
 
 void setup() { // put your setup code here, to run once:
@@ -52,14 +48,9 @@ void loop() { // put your main code here, to run repeatedly:
 	if (timer == ticks) {
 		return;
 	}
-
 	ticks = timer;
-	loops++;
 
-	tmp = analogRead(PHOTORES_APin);
-	luzMin = min(luzMin, tmp);
-	luzMax = max(luzMax, tmp);
-	luzSum += tmp;
+	luz = analogRead(PHOTORES_APin);
 
 	if (timer == 59) {
 		// Reading temperature or humidity takes about 250 milliseconds!
@@ -83,12 +74,10 @@ void loop() { // put your main code here, to run repeatedly:
 		Serial.print(t);
 		Serial.print(" i:");
 		Serial.print(hic);
-		Serial.print(" la:");
-		Serial.print(luzSum/loops);
-		Serial.print(" ln:");
-		Serial.print(luzMin);
+		Serial.print(" lv:");
+		Serial.print(luz);
 		Serial.print(" lx:");
-		Serial.print(luzMax);
+		Serial.print(Lux(luz));
 		Serial.println("");
 
 		lcd.clear();
@@ -103,16 +92,10 @@ void loop() { // put your main code here, to run repeatedly:
 		digitalWrite(13, HIGH);
 		delay(100);
 		digitalWrite(13, LOW);
-
-		// reset counters
-		loops = 0;
-		luzMin = 1024;
-		luzMax = 0;
-		luzSum = 0;
 	}
 
 	lcd.setCursor(10, 2);
-	lcd.print(tmp);
+	lcd.print(luz);
 
 	lcd.setCursor(14, 2);
 	if (timer < 10)
@@ -123,14 +106,12 @@ void loop() { // put your main code here, to run repeatedly:
 }
 
 
-/* Not used now
 double Lux(int RawADC0) {
 	double Vout = RawADC0 * 0.0048828125;
 	//int lux=500/(10*((5-Vout)/Vout));//use this equation if the LDR is in the upper part of the divider
-	int lux = (2500 / Vout-500) / 10;
+	double lux = (2500 / Vout-500) / 10;
 	return lux;
 }
-*/
 
 /* GRAFANA: 
 SELECT (2500 / (mean("avg") * 0.0048828125) - 500) / 10, 
